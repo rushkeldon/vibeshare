@@ -2,7 +2,7 @@
 
 import styles from "./terminal.module.css";
 import { useEffect, useState } from 'react';
-import { useSignalTower } from '@/hooks/useSignalTower';
+import { getSignalTower } from '@/data/getSignalTower';
 
 type TerminalProps = {
   msg : string;
@@ -11,14 +11,14 @@ type TerminalProps = {
 export default function Terminal( { msg } : TerminalProps) {
   const [ terminalMsg, setTerminalMsg ] = useState( msg );
 
-  const { terminalMsgReceived } = useSignalTower();
+  const { terminalMsgReceived } = getSignalTower();
 
   useEffect( () => {
     terminalMsgReceived.add( setTerminalMsg );
     return () => {
       terminalMsgReceived.remove( setTerminalMsg );
     };
-  }, [] );
+  }, [ terminalMsgReceived ] );
 
   return <pre className={styles.terminal}>{terminalMsg}</pre>
 }

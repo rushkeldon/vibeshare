@@ -1,7 +1,6 @@
 /**
- * useSignalTower provides a client-side data store with signals for communication
+ * getSignalTower provides a client-side data store with signals for communication
  * between any components of a web app (React or otherwise).
- * While it is written as a React hook, it is not and can be used in non-React code.
  * Signals are like events, but faster, and better.
  * See https://millermedeiros.github.io/js-signals/ for more info.
  * global.signalTower is added for easy access globally.
@@ -20,13 +19,13 @@
  * case :
  *  - In a react component
  *  ```
- *  const { signalName } = useSignalTower();
+ *  const { signalName } = getSignalTower();
  *  const [ state, setState ] = useState( signalName.latestArgs[0] ); // start with the latest argument(s)
  *
  *  useEffect( () => {
  *    signalName.add( setState );                   // subscribe to signal - immediately get latest arguments, calling the setState causes a re-render
  *    return () => signalName.remove( setState );   // unsubscribe from the signal when unmounting
- *  }, [] );
+ *  }, [ signalName ] );
  *  ```
  */
 
@@ -47,7 +46,7 @@ export type SignalTower = {
   [ key : string ] : ExtendedSignal;
 } & SignalTowerMethods;
 
-let originalLogLevels : Record<string, number> = {};
+const originalLogLevels : Record<string, number> = {};
 
 const reservedNames = [
   'addSignal',
@@ -105,7 +104,7 @@ const signalTower = {
 ;
 
 global.signalTower = signalTower as SignalTower;
-export const useSignalTower = () : SignalTower => signalTower as SignalTower;
+export const getSignalTower = () : SignalTower => signalTower as SignalTower;
 
 /*region adding signals here */
 // they can be added from anywhere, but nice to have a one stop shop

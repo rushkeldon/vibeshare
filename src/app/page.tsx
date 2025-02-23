@@ -1,7 +1,7 @@
 'use client';
 
 import styles from "./page.module.css";
-import { useSignalTower } from '@/hooks/useSignalTower';
+import { getSignalTower } from '@/data/getSignalTower';
 import { useEffect, useState } from 'react';
 import Terminal from '@/components/Terminal/Terminal';
 
@@ -12,7 +12,8 @@ async function fetchDataAndRender() {
     const response = await fetch( dataURL );
     const data = await response.json();
 
-    const { appDataReceived } = useSignalTower();
+    //
+    const { appDataReceived } = getSignalTower();
 
     appDataReceived.dispatch( data );
   } catch( error ) {
@@ -21,7 +22,7 @@ async function fetchDataAndRender() {
 }
 
 export default function Home() {
-  const { appDataReceived, terminalMsgReceived } = useSignalTower();
+  const { appDataReceived, terminalMsgReceived } = getSignalTower();
   const [ appData, setAppData ] = useState<any>( appDataReceived?.latestArgs?.[0] );
   const [ shouldTerminalDisplay, setShouldTerminalDisplay ] = useState<boolean>( true );
   const [inputValue, setInputValue] = useState<string>('');
@@ -32,7 +33,7 @@ export default function Home() {
     return () => {
       appDataReceived.remove( setAppData );
     };
-  }, [] );
+  }, [appDataReceived] );
 
   return (
     <div className={styles.page}>
@@ -55,7 +56,7 @@ export default function Home() {
             dispatch
           </button>
         </div>
-        <button onClick={() => setShouldTerminalDisplay( !shouldTerminalDisplay )}>toggle terminal conditional rendering</button>
+        <button onClick={() => setShouldTerminalDisplay( !shouldTerminalDisplay )}>toggle conditional rendering of Terminal</button>
         {Boolean( appData && shouldTerminalDisplay ) ? <Terminal msg={appData?.terminalMsg ?? 'no message'}/> : null}
       </main>
     </div>

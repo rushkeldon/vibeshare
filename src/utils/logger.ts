@@ -9,8 +9,7 @@ export const levels = {
 
 let level : number = levels.LOG;
 
-// @ts-ignore
-const noop = ( msg : any, val : any = {} ) => null;
+const noop = ( msg : any, val : any = {} ) => msg || val ? null : null;
 
 export let error = noop;
 export let warn = noop;
