@@ -107,10 +107,14 @@ const signalTower = {
 global.signalTower = signalTower as SignalTower;
 export const useSignalTower = () : SignalTower => signalTower as SignalTower;
 
-/*region adding signals here to keep this file a one-stop shop */
+/*region adding signals here */
+// they can be added from anywhere, but nice to have a one stop shop
 
 signalTower.addSignal( 'appDataReceived', 2 );
 signalTower.addSignal( 'terminalMsgReceived', 2 );
 signalTower.addSignal( 'windowFocusChanged', 2 );
 
 /*endregion */
+
+
+// TODO : may introduce another file signalTowerUtils.ts for utility functions such as snapshots and hydration
