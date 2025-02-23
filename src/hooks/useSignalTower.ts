@@ -33,12 +33,6 @@
 import signals from 'signals';
 import * as logger from '@/utils/logger';
 
-declare global {
-  interface Window {
-    signalTower : SignalTower;
-  }
-}
-
 type ExtendedSignal = signals.Signal & {
   logLevel? : number;
   latestArgs? : any[];
@@ -75,11 +69,9 @@ const createSignal = ( name : string, logLevel ) : ExtendedSignal => {
     originalDispatch( ...args );
     switch( signal.logLevel ) {
       case 1:
-        logger.log( `signal dispatched : ${name}` );
-        break;
+        return logger.log( `signal dispatched : ${name}` );
       case 2:
-        logger.log( `signal dispatched : ${name}\n\twith args`, { ...args } );
-        break;
+        return logger.log( `signal dispatched : ${name}\n\twith args`, { ...args } );
     }
   };
   return signal;
