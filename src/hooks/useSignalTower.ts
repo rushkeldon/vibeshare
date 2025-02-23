@@ -21,7 +21,7 @@
  *  - In a react component
  *  ```
  *  const { signalName } = useSignalTower();
- *  const [ state, setState ] = useState( signalName.latestArgs ); // start with the latest arguments
+ *  const [ state, setState ] = useState( signalName.latestArgs[0] ); // start with the latest argument(s)
  *
  *  useEffect( () => {
  *    signalName.add( setState );                   // subscribe to signal - immediately get latest arguments, calling the setState causes a re-render
