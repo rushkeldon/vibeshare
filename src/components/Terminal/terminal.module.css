@@ -1,0 +1,19 @@
+.terminal {
+  box-sizing: border-box;
+  font-size: 12px;
+  background-color: #1d1f20;
+  padding: 10px;
+  border: 1px solid #efc369;
+  min-height: 300px;
+  font-family: 'Courier New', Courier, monospace;
+  color : yellowgreen;
+  position: relative;
+  &::before {
+    position : absolute;
+    top : -18px;
+    left : -5px;
+    content: 'terminal';
+    color: #efc369;
+    font-weight : 800;
+  }
+}
