@@ -1,9 +1,10 @@
 /**
- * useSignalTower provides a data store with signals for communication between any components of a web app (React or otherwise).
+ * useSignalTower provides a client-side data store with signals for communication
+ * between any components of a web app (React or otherwise).
  * While it is written as a React hook, it is not and can be used in non-React code.
- * Signals are like events, but faster and more type safe.
+ * Signals are like events, but faster, and better.
  * See https://millermedeiros.github.io/js-signals/ for more info.
- * window.signalTower is added for easy access globally.
+ * global.signalTower is added for easy access globally.
  * The goal of this library is to be a Redux replacement - a full data store.
  * It has these features :
  * - unidirectional data flow
@@ -18,15 +19,13 @@
  * subscribe / unsubscribe usage patterns by case :
  * case :
  *  - In a react component
- *  - The signal will be dispatched multiple times and the component needs to be re-rendered each time
  *  ```
  *  const { signalName } = useSignalTower();
- *  const [ state, setState ] = useState();
+ *  const [ state, setState ] = useState( signalName.latestArgs ); // start with the latest arguments
  *
  *  useEffect( () => {
- *    const namedFunction = ( payload ) => setState( payload ); // causes a re-render
- *    signalName.add( namedFunction );                          // subscribe to the signal
- *    return () => signalName.remove( namedFunction );          // unsubscribe from the signal when unmounting
+ *    signalName.add( setState );                   // subscribe to signal - immediately get latest arguments, calling the setState causes a re-render
+ *    return () => signalName.remove( setState );   // unsubscribe from the signal when unmounting
  *  }, [] );
  *  ```
  */
