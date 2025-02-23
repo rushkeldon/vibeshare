@@ -60,7 +60,7 @@ const createSignal = ( name : string, logLevel ) : ExtendedSignal => {
 
   signal.logLevel = logLevel;
   originalLogLevels[ name ] = logLevel;
-  /*  memorize is super key : this allows the signal to be dispatched immediately to new listeners only with the last arguments */
+  /*  memorize is super key : this allows the signal to be dispatched immediately to new listeners only with the last argument(s) */
   signal.memorize = true;
   signal.latestArgs = [];
 
