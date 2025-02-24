@@ -5,7 +5,7 @@
 
   --button-primary-hover: #383838;
   --button-secondary-hover: #f2f2f2;
-
+  font-size: 16px;
   display: grid;
   grid-template-rows: 20px 1fr 20px;
   align-items: center;
@@ -30,10 +30,12 @@
 .input {
   width: 329px;
   padding: 0 5px;
+  font-size: 16px;
 }
 
 .btn {
   padding: 0 10px;
+  font-size: 16px;
 }
 
 .main {
@@ -58,8 +60,9 @@
 }
 
 .main code {
-  font-family: inherit;
-  background: var(--gray-alpha-100);
+  font-family: 'Courier New', Courier, monospace;
+  background: #343434;
+  color: #efc369;
   padding: 2px 4px;
   border-radius: 4px;
   font-weight: 600;
