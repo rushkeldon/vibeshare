@@ -40,7 +40,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1>VibeShare</h1>
           <p>
-            A showcase for <code>useSignalTower</code><br/>
+            A showcase for <code>getSignalTower</code> (working name).<br/>
             The Terminal component is a child to this Home component in src/app/page.tsx<br/>
             It is conditionally rendered based on the state of <code>shouldTerminalDisplay</code> which is toggled by the button below.<br/>
             The Home component is re-rendered when any of these three states are updated (useSate) <code>appData</code>, <code>shouldTerminalDisplay</code>, <code>inputValue</code> (onChange).<br/>
