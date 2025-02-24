@@ -62,7 +62,7 @@ export default function Home() {
             </button>
           </div>
           <button className={styles.btn} onClick={() => setShouldTerminalDisplay( !shouldTerminalDisplay )}>toggle shouldTerminalDisplay</button>
-          {Boolean( appData && shouldTerminalDisplay ) ? <Terminal msg={appData?.terminalMsg ?? 'no message'}/> : null}
+          {Boolean( appData && shouldTerminalDisplay ) ? <Terminal/> : null}
       </main>
     </div>
   );

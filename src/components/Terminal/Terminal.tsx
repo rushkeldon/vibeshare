@@ -4,14 +4,10 @@ import styles from "./terminal.module.css";
 import { useEffect, useState } from 'react';
 import { getSignalTower } from '@/data/getSignalTower';
 
-type TerminalProps = {
-  msg : string;
-}
-
-export default function Terminal( { msg } : TerminalProps) {
-  const [ terminalMsg, setTerminalMsg ] = useState<string>( msg );
-
+export default function Terminal() {
   const { terminalMsgReceived } = getSignalTower();
+  const [ terminalMsg, setTerminalMsg ] = useState( terminalMsgReceived.getLatest() );
+
 
   useEffect( () => {
     terminalMsgReceived.add( setTerminalMsg );
