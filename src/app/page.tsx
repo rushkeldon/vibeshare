@@ -5,16 +5,12 @@ import { getSignalTower } from '@/data/getSignalTower';
 import { useEffect, useState } from 'react';
 import Terminal from '@/components/Terminal/Terminal';
 
-async function fetchDataAndRender() {
+async function fetchAppData() {
   const dataURL = '/app_data.json';
-
   try {
     const response = await fetch( dataURL );
     const data = await response.json();
-
-    //
     const { appDataReceived } = getSignalTower();
-
     appDataReceived.dispatch( data );
   } catch( error ) {
     console.error( 'Error fetching index.json:', error );
@@ -23,13 +19,13 @@ async function fetchDataAndRender() {
 
 export default function Home() {
   const { appDataReceived, terminalMsgReceived } = getSignalTower();
-  const [ appData, setAppData ] = useState<any>( null );
+  const [ appData, setAppData ] = useState<any>();
   const [ shouldTerminalDisplay, setShouldTerminalDisplay ] = useState<boolean>( true );
-  const [ inputValue, setInputValue ] = useState<string>( '' );
+  const [ inputValue, setInputValue ] = useState( '' );
 
   useEffect( () => {
     appDataReceived.add( setAppData );
-    fetchDataAndRender();
+    fetchAppData();
     return () => {
       appDataReceived.remove( setAppData );
     };

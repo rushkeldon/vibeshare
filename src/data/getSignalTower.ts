@@ -11,7 +11,6 @@
  * - logging levels for each signal
  * - setting log level for all signals : setLogLevel( 2 );
  * - resetting all signals logging level to their original levels : setLogLevel();
- * - using generic types for signal arguments to allow for type safety if desired
  **/
 
 /**
@@ -21,7 +20,7 @@
  *  - In a react component
  *  ```
  *  const { signalName } = getSignalTower();
- *  const [ state, setState ] = useState<typeAssertion>( null );
+ *  const [ state, setState ] = useState( signalName.getLatest() ); // start with the latest argument(s)
  *
  *  useEffect( () => {
  *    signalName.add( setState );                   // subscribe to signal - immediately get latest arguments, calling the setState causes a re-render
@@ -33,13 +32,14 @@
 import signals from 'signals';
 import * as logger from '@/utils/logger';
 
-type ExtendedSignal<T = any> = signals.Signal & {
-  logLevel?: number;
+type ExtendedSignal = signals.Signal & {
+  logLevel? : number;
+  getLatest : () => any[];
 };
 
 type SignalTowerMethods = {
   setLogLevel : ( logLevel : number ) => void;
-  addSignal: <T = any>(name: string, logLevel?: number) => ExtendedSignal<T>;
+  addSignal : ( name : string, logLevel : number ) => ExtendedSignal;
 };
 
 export type SignalTower = {
@@ -53,22 +53,29 @@ const reservedNames = [
   'setLogLevel'
 ];
 
-const createSignal = <T = any>(name: string, logLevel: number): ExtendedSignal<T> => {
-  const signal: ExtendedSignal<T> = new signals.Signal() as ExtendedSignal<T>;
-  const originalDispatch = signal.dispatch.bind(signal);
+const createSignal = ( name : string, logLevel ) : ExtendedSignal => {
+  const signal : ExtendedSignal = new signals.Signal() as ExtendedSignal;
+  const originalDispatch = signal.dispatch.bind( signal );
 
   signal.logLevel = logLevel;
-  originalLogLevels[name] = logLevel;
-  // memorize set to true is key to this implementation
+  originalLogLevels[ name ] = logLevel;
+  /*  memorize is super key : this allows the signal to be dispatched immediately to new listeners only with the last argument(s) */
   signal.memorize = true;
 
-  signal.dispatch = (...args: T[]) => {
-    originalDispatch(...args);
-    switch (signal.logLevel) {
+  // retrieves the latest dispatched value thanks to memorize
+  signal.getLatest = () => {
+    let latestValue: any[] = [];
+    signal.addOnce((...args) => latestValue = args );
+    return latestValue;
+  };
+
+  signal.dispatch = ( ...args : any[] ) => {
+    originalDispatch( ...args );
+    switch( signal.logLevel ) {
       case 1:
-        return logger.log(`signal dispatched: ${name}`);
+        return logger.log( `signal dispatched : ${name}` );
       case 2:
-        return logger.log(`signal dispatched: ${name}\n\twith args`, { ...args });
+        return logger.log( `signal dispatched : ${name}\n\twith args`, { ...args } );
     }
   };
   return signal;
@@ -85,17 +92,17 @@ const signalTower = {
       } );
     },
     // adds a signal to the signalTower (if doesn't exist) and returns it (or the pre-existing signal)
-    addSignal: <T = any>(name: string, logLevel: number = 0): ExtendedSignal<T> => {
+    addSignal : ( name : string, logLevel : number = 0 ) : ExtendedSignal => {
       try {
-        if (!name) throw new Error('Signal name is required');
-        if (reservedNames.includes(name)) throw new Error(`Signal name ${name} is reserved`);
+        if( !name ) throw new Error( 'Signal name is required' );
+        if( reservedNames.includes( name ) ) throw new Error( `Signal name ${name} is reserved` );
 
-        return signalTower[name] ?
-          signalTower[name] as ExtendedSignal<T> :
-          signalTower[name] = createSignal<T>(name, logLevel);
-      } catch (e) {
-        logger.error('signalTower.addSignal error', e);
-        throw new Error(`Failed to add signal with name: ${name}`);
+        return signalTower[ name ] ?
+          signalTower[ name ] :
+          signalTower[ name ] = createSignal( name, logLevel );
+      } catch( e ) {
+        logger.error( 'signalTower.addSignal error', e );
+        throw new Error( `Failed to add signal with name : ${name}` );
       }
     }
   }
@@ -107,8 +114,8 @@ export const getSignalTower = () : SignalTower => signalTower as SignalTower;
 /*region adding signals here */
 // they can be added from anywhere, but nice to have a one-stop shop
 
-signalTower.addSignal<any>( 'appDataReceived', 2 );
-signalTower.addSignal<string>( 'terminalMsgReceived', 2 );
+signalTower.addSignal( 'appDataReceived', 2 );
+signalTower.addSignal( 'terminalMsgReceived', 2 );
 signalTower.addSignal( 'windowFocusChanged', 2 );
 
 /*endregion */
