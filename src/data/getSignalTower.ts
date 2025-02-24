@@ -21,11 +21,10 @@
  *  - In a react component
  *  ```
  *  const { signalName } = getSignalTower();
- *  const [ state, setState ] = useState( signalName.latestArgs[0] ); // start with the latest argument(s)
+ *  const [ state, setState ] = useState<typeAssertion>( null );
  *
  *  useEffect( () => {
  *    signalName.add( setState );                   // subscribe to signal - immediately get latest arguments, calling the setState causes a re-render
- *    // this pattern assumes that the state from useState is the same type as the argument(s) (a.k.a. payload) passed to the signal
  *    return () => signalName.remove( setState );   // unsubscribe from the signal when unmounting
  *  }, [ signalName ] );
  *  ```
@@ -36,7 +35,6 @@ import * as logger from '@/utils/logger';
 
 type ExtendedSignal<T = any> = signals.Signal & {
   logLevel?: number;
-  latestArgs?: T[];
 };
 
 type SignalTowerMethods = {
@@ -63,10 +61,8 @@ const createSignal = <T = any>(name: string, logLevel: number): ExtendedSignal<T
   originalLogLevels[name] = logLevel;
   // memorize set to true is key to this implementation
   signal.memorize = true;
-  signal.latestArgs = [];
 
   signal.dispatch = (...args: T[]) => {
-    signal.latestArgs = args;
     originalDispatch(...args);
     switch (signal.logLevel) {
       case 1:

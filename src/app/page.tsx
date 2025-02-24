@@ -50,7 +50,9 @@ export default function Home() {
             It doesn't matter when the Terminal is rendered - it always displays the latest message.<br/><br/>
             The goal is to have a single source of truth for 'all' data in the app, but to avoid prop drilling and context API and still work seamlessly with React's render cycle.<br/>
           </p>
-          <a href="https://github.com/rushkeldon/vibeshare/blob/main/src/data/getSignalTower.ts">check out the code</a>
+          <a href="https://github.com/rushkeldon/vibeshare/blob/main/src/data/getSignalTower.ts">check out the getSignalTower code</a>
+          <a href="https://millermedeiros.github.io/js-signals/">read up on js-signals</a>
+          <a href="https://chatgpt.com/share/67bc0652-593c-800f-804e-64287251ac8e">comparing getSignalTower, Redux, and Context Provider with ChatGPT</a>
           <div>
             <input
               id="terminalMsg"
