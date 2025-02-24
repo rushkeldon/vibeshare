@@ -36,6 +36,7 @@
 .btn {
   padding: 0 10px;
   font-size: 16px;
+  max-width: 25%;
 }
 
 .main {

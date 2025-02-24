@@ -9,7 +9,7 @@ type TerminalProps = {
 }
 
 export default function Terminal( { msg } : TerminalProps) {
-  const [ terminalMsg, setTerminalMsg ] = useState( msg );
+  const [ terminalMsg, setTerminalMsg ] = useState<string>( msg );
 
   const { terminalMsgReceived } = getSignalTower();
 
